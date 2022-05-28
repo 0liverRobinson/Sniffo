@@ -13,18 +13,17 @@ MAX_PACKET_SIZE = 65535
 ICMP_CODE = 1
 sniffing = True
 sniff_thread = None
-
 sniffresults = []
 
-
+ 
 
 
 def displaySniffing():
 
     # Create new window 
-    window = Window(715, 400)
+    window = Window(715, 400, sniff_thread)
 
-    while sniffing:            
+    while True:            
 
         # Dump results to table
         while len ( sniffresults ) > 0:
@@ -57,9 +56,10 @@ def sniff():
         ip_packet = packet_data[14:len( packet_data )]
         ttl, protocol = struct.unpack( "!BB", ip_packet[8:10]  )
 
+
         if source_address == "0.0.0.0" or destination_address == "255.255.255.255":
             continue
-    
+        
         # Resolve Protocol
         if protocol == 1:
             protocol = "ICMP"
@@ -69,11 +69,9 @@ def sniff():
             protocol = "UDP"
         else:
             continue
-
-        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl )
         
+        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl )
         sniffresults.append(results)
-
 
     pass
 
@@ -81,6 +79,5 @@ def sniff():
 
 if __name__ == "__main__":
     sniff_thread = Thread( target=sniff )
-    sniff_thread.start()
     displaySniffing()
-    pass    
+    pass
