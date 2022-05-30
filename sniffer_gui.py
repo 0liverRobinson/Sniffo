@@ -75,7 +75,7 @@ class Window:
         this.ICMPFilter = None
         this.TCPFilter = None
         
-
+        
         # Create window    
         this.win = Tk()
         this.createWindow()

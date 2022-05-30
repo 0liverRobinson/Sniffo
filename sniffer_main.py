@@ -1,9 +1,13 @@
 # I really feel this applicaiton is just an attempt to put the word "sniff" in as much places as possible :) #
 
+import multiprocessing
 import struct
 import socket
+import sys
 from threading import Thread
 import time
+
+
 
 from sniffer_gui import Window
 from sniff_res import sniffData
@@ -11,30 +15,39 @@ from sniff_res import sniffData
 
 MAX_PACKET_SIZE = 65535
 ICMP_CODE = 1
-sniffing = True
 sniff_thread = None
 sniffresults = []
+protocolToString = {
+    1: "ICMP",
+    6: "TCP",
+    17: "UDP"
+}
 
- 
 
 
 def displaySniffing():
 
-    # Create new window 
+    # Create new window
     window = Window(715, 400, sniff_thread)
+    try: 
+        while True:
+                # Dump results to table and update window
+                while len ( sniffresults ) > 0:
+                    window.insert(sniffresults.pop(0))
+                    # Update window 
+                    window.win.update()
+                    window.win.update_idletasks()
 
-    while True:            
+                # Update window 
+                window.win.update()
+                window.win.update_idletasks()
+                
+                # Update results every ms
+                time.sleep(0.1)
+    except:
+        sys.exit()
+        
 
-        # Dump results to table
-        while len ( sniffresults ) > 0:
-            window.insert(sniffresults.pop(0))
-        
-        # Update window 
-        window.win.update()
-        window.win.update_idletasks()
-        
-        # Update results every ms
-        time.sleep(0.1)
     pass
 
 
@@ -56,28 +69,20 @@ def sniff():
         ip_packet = packet_data[14:len( packet_data )]
         ttl, protocol = struct.unpack( "!BB", ip_packet[8:10]  )
 
+        protocol = protocolToString.get( protocol, "no_support" )
 
-        if source_address == "0.0.0.0" or destination_address == "255.255.255.255":
-            continue
-        
-        # Resolve Protocol
-        if protocol == 1:
-            protocol = "ICMP"
-        elif protocol == 6:
-            protocol = "TCP"
-        elif protocol == 17:
-            protocol = "UDP"
-        else:
+        if source_address == "0.0.0.0" or destination_address == "255.255.255.255" or protocol == "no_support":
             continue
         
         results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl )
         sniffresults.append(results)
-
+        
     pass
 
 
 
 if __name__ == "__main__":
-    sniff_thread = Thread( target=sniff )
+    sniff_thread = Thread( target=sniff, daemon=True )
+
     displaySniffing()
     pass
