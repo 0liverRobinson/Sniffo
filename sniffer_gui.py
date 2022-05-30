@@ -1,3 +1,4 @@
+from math import floor
 from tkinter import ttk
 from tkinter import *
 import tkinter
@@ -84,16 +85,17 @@ class Window:
 
     # Insert data into the table
     def insert(this, sniffRes):
-    
+
         # Filter packets
-        if sniffRes.protocol == "UDP" and this.UDPFiler.get():
-            return
-        elif sniffRes.protocol == "TCP" and this.TCPFilter.get():
-            return
-        elif sniffRes.protocol == "ICMP" and this.ICMPFilter.get():
+        if sniffRes.protocol == "UDP" and this.UDPFiler.get() or sniffRes.protocol == "TCP" and this.TCPFilter.get() or sniffRes.protocol == "ICMP" and this.ICMPFilter.get():
             return
         
+        # Insert data into table
         this.dataCount+=1
         this.table.insert(parent='', index=this.dataCount, values=(sniffRes.protocol, sniffRes.source_ip, sniffRes.destination_ip, sniffRes.packet_size, sniffRes.ttl), tags=sniffRes.protocol)
+
+        # Auto scroll
+        if ( this.sb.get()[1]  == 1 ):
+            this.table.yview_moveto(1)
 
         pass
