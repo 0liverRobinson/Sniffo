@@ -1,4 +1,6 @@
+from cmath import exp
 from math import floor
+import sys
 from tkinter import ttk
 from tkinter import *
 import tkinter
@@ -14,6 +16,12 @@ class Window:
         this.centreY = str ( int  ( 1/2 *  (this.win.winfo_screenheight() - this.height ) ) )
         this.win.geometry( str ( this.width ) + 'x' + str ( this.height ) + '+' + this.centreX + '+' + this.centreY )
         this.win.iconphoto(False, tkinter.PhotoImage(file='img/logo.png'))
+        this.win.configure(background="black")
+
+        # Fill table background in as black
+        s = ttk.Style(this.win)
+        s.configure("Treeview", background="black", fieldbackground="black")
+        
 
         # Create table        
         this.table = ttk.Treeview(this.win, columns=(0,1,2,3,4), show='headings', height=17)
@@ -30,26 +38,25 @@ class Window:
 
         # Create scroll bar
         this.sb = ttk.Scrollbar(this.win, orient='vertical')
-        this.table.configure(yscrollcommand=this.sb.set)
+        this.table.configure(yscrollcommand=this.sb.set, padding=0)
         this.sb.configure(command=this.table.yview)
         this.sb.pack(side=RIGHT, fill=BOTH)
+    
 
         # Colour code based on protocol
         this.table.tag_configure("ICMP", background="red", font="white", foreground="white")
         this.table.tag_configure("TCP", background="blue", font="white", foreground="white")
         this.table.tag_configure("UDP", background="black", font="white", foreground="yellow")
         
-
-
-        this.table.pack()
+        this.table.pack(side=TOP, fill=BOTH, expand=True)
 
 
         this.bottomFrame = Frame(this.win)
-        this.bottomFrame.pack(side=LEFT, fill=BOTH)
-
+        this.bottomFrame.pack(side=BOTTOM, fill=BOTH)
+        
         # Create buttons:   
         this.start_button = Button(this.bottomFrame, text="Start", command=this.thread.start)
-        this.start_button.pack( side=LEFT)
+        this.start_button.pack(side=LEFT)
         
         this.UDPFiler = BooleanVar()
         this.ICMPFilter = BooleanVar()
@@ -58,12 +65,11 @@ class Window:
         this.UDPCheck = ttk.Checkbutton(this.bottomFrame, text="UDP", variable=this.UDPFiler, onvalue=False, offvalue=True)
         this.TCPCheck = ttk.Checkbutton(this.bottomFrame, text="TCP", variable=this.TCPFilter, onvalue=False, offvalue=True)
         this.ICMPCheck = ttk.Checkbutton(this.bottomFrame, text="ICMP", variable=this.ICMPFilter, onvalue=False, offvalue=True)
-        
-        this.UDPCheck.pack(side=RIGHT)
-        this.TCPCheck.pack(side=RIGHT)
-        this.ICMPCheck.pack(side=RIGHT)
+        this.UDPCheck.pack(side=LEFT)
+        this.TCPCheck.pack(side=LEFT)
+        this.ICMPCheck.pack(side=LEFT)
 
-        this.win.resizable(False, False)
+        
     
     def __init__(this, width, height, thread) -> None:
 

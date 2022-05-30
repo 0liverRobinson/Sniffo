@@ -7,23 +7,8 @@ import sys
 from threading import Thread
 import time
 
-
-
 from sniffer_gui import Window
 from sniff_res import sniffData
-
-
-MAX_PACKET_SIZE = 65535
-ICMP_CODE = 1
-sniff_thread = None
-sniffresults = []
-protocolToString = {
-    1: "ICMP",
-    6: "TCP",
-    17: "UDP"
-}
-
-
 
 def displaySniffing():
 
@@ -41,10 +26,8 @@ def displaySniffing():
                 # Update window 
                 window.win.update()
                 window.win.update_idletasks()
-                
-                # Update results every ms
-                time.sleep(0.1)
     except:
+        # Exit program
         sys.exit()
         
 
@@ -82,6 +65,13 @@ def sniff():
 
 
 if __name__ == "__main__":
+    MAX_PACKET_SIZE = 65535
+    sniffresults = []
+    protocolToString = {
+        1: "ICMP",
+        6: "TCP",
+        17: "UDP"
+    }
     sniff_thread = Thread( target=sniff, daemon=True )
 
     displaySniffing()
