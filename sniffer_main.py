@@ -57,7 +57,7 @@ def sniff():
         if source_address == "0.0.0.0" or destination_address == "255.255.255.255" or protocol == "no_support":
             continue
         
-        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl )
+        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl ,packet_data )
         sniffresults.append(results)
         
     pass
