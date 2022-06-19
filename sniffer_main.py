@@ -49,15 +49,19 @@ def sniff():
         destination_address = socket.inet_ntoa(destination_address)
 
         # Extract TTL + Protocol
-        ip_packet = packet_data[14:len( packet_data )]
+        ip_packet = packet_data[14:]
         ttl, protocol = struct.unpack( "!BB", ip_packet[8:10]  )
 
         protocol = protocolToString.get( protocol, "no_support" )
 
+
+        # Get starting point of packet data
+        startofdata = 16
+
         if source_address == "0.0.0.0" or destination_address == "255.255.255.255" or protocol == "no_support":
             continue
         
-        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl ,packet_data )
+        results = sniffData(protocol, source_address, destination_address, str ( len(packet_data ) ), ttl ,ip_packet[startofdata:] )
         sniffresults.append(results)
         
     pass

@@ -21,12 +21,6 @@ class Window:
         
         newWinThread = Thread(target=analysisWin.createWindow)
         newWinThread.start()
-
-        # Open window with data: 
-        print ( packet_data.source_ip) 
-        print ( packet_data.destination_ip) 
-        print ( packet_data.packet_size) 
-        print ( packet_data.ttl )
         
 
     def createWindow(this):
