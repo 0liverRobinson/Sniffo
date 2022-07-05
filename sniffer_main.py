@@ -34,7 +34,6 @@ def displaySniffing():
         # Exit program
         sys.exit()
         
-
     pass
 
 # Sniff packets
