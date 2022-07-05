@@ -1,3 +1,4 @@
+# Create object to store all the packet information
 class sniffData:
     def __init__(this, protocol, source_ip, destination_ip, packet_size, ttl, data):
         this.protocol = protocol
